@@ -12,17 +12,35 @@ import joblib
 
 data = pd.read_csv("teste_indicium_precificacao.csv")
 
-data.columns
-print(data.count())
-print(data.describe())
-print(data['price'].median())
-print(data['price'].mean())
-data['bairro_group'].value_counts()
-print(data.info())
+#informacoes basicas 
+print(data.columns)
+#print(data.count())
+#print(data.describe())
+#print(data['price'].median())
+#print(data['price'].mean())
+print(data['bairro_group'].value_counts())
+#print(data.info())
+
+#dados faltantes de strings
+data['nome'] = data['nome'].fillna('Sem informacao do nome')
+data['bairro_group'] = data['bairro_group'].fillna('Sem informacao do grupo do bairro')
+data['bairro'] = data['bairro'].fillna('Sem informacao do bairro')
+data['room_type'] = data['room_type'].fillna('Sem informacao do tipo de quarto')
+data['host_name'] = data['host_name'].fillna('Sem informaccoes do anfitriao')
+
+#dados faltantes de numericos
+data['numero_de_reviews'] = data['numero_de_reviews'].fillna('0')
+data['reviews_por_mes'] = data['reviews_por_mes'].fillna(0)
+#valores com datas
+data['ultima_review'] = data['ultima_review'].fillna('0')
 
 
-data['bairro'] = data['bairro'].str.strip().str.lower()
+
+#remover espacos 
+data['bairro'] = data['bairro'].str.strip()
+#agrupar por bairros e fazer a média dos valores
 preco_tipo = data.groupby('bairro_group')[['price']].mean().sort_values('price')
+#gráfico
 preco_tipo.plot(kind='barh', figsize=(14, 10), color='purple')
 plt.title('Preço Médio por Bairro')
 plt.xlabel('Preço Médio')
@@ -38,7 +56,23 @@ plt.figure(figsize=(12, 6))
 sns.scatterplot(x='disponibilidade_365', y='price', data=data)
 plt.title('Preço vs. Disponibilidade no Ano')
 plt.show() 
-data['nome'] = data['nome'].fillna('')
+
+#dados faltantes de strings
+data['nome'] = data['nome'].fillna('Sem informacao do nome')
+data['bairro_group'] = data['bairro_group'].fillna('Sem informacao do grupo do bairro')
+data['bairro'] = data['bairro'].fillna('Sem informacao do bairro')
+data['room_type'] = data['room_type'].fillna('Sem informacao do tipo de quarto')
+data['host_name'] = data['host_name'].fillna('Sem informaccoes do anfitriao')
+
+#dados faltantes de numericos
+data['numero_de_reviews'] = data['numero_de_reviews'].fillna('0')
+data['reviews_por_mes'] = data['reviews_por_mes'].fillna(0)
+#valores com datas
+data['ultima_review'] = data['ultima_review'].fillna('0')
+
+
+
+
 
 vectorizer = CountVectorizer()
 X_text = vectorizer.fit_transform(data['nome'])
@@ -69,10 +103,9 @@ apartamento = {'id': 2595,
     'calculado_host_listings_count': 2,
     'disponibilidade_365': 355}
 
-novo_df = pd.DataFrame([apartamento])
-novo_df = novo_df.reindex(columns=X.columns, fill_value=0)
+novo_data = pd.DataFrame([apartamento])
+novo_data = novo_data.reindex(columns=X.columns, fill_value=0)
+preco_previsto = model.predict(novo_data)
+print(f"Preco previsto: ${preco_previsto[0]:.2f}")
 
-
-preco_previsto = model.predict(novo_df)
-print(f"Preço previsto: ${preco_previsto[0]:.2f}")
 #joblib.dump(model, 'modelo_precificacao.pkl')
