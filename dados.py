@@ -13,12 +13,12 @@ import joblib
 data = pd.read_csv("teste_indicium_precificacao.csv")
 
 #informacoes basicas 
-print(data.columns)
+#print(data.columns)
 #print(data.count())
 #print(data.describe())
 #print(data['price'].median())
 #print(data['price'].mean())
-print(data['bairro_group'].value_counts())
+#print(data['bairro_group'].value_counts())
 #print(data.info())
 
 #dados faltantes de strings
@@ -35,7 +35,12 @@ data['reviews_por_mes'] = data['reviews_por_mes'].fillna(0)
 data['ultima_review'] = data['ultima_review'].fillna('0')
 
 
-
+#mostrar todos os bairros que pertencem a um grupo
+#divisaoBairro = data.groupby('bairro_group')['bairro'].unique().to_dict()
+#for i, j in divisaoBairro.items():
+    #print("Grupo dos bairros: {}" .format(i))
+    #print("Bairros: {}\n" .format(j))
+    
 #remover espacos 
 data['bairro'] = data['bairro'].str.strip()
 #agrupar por bairros e fazer a média dos valores
