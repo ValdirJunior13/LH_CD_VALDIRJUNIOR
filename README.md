@@ -11,17 +11,17 @@ O modelo escolhido foi um Random Forest Regressor, pois ele tem bom desempenho p
 
 ## Instalação
 
-1. Clone o repositório
+1. Clone o repositório:
     git clone https://github.com/ValdirJunior13/LH_CD_VALDIRJUNIOR 
 
-2. Instalando as dependências
+2. Instalando as dependências:
     pip install -r requirements.txt
 
 3. Executando o Projeto 
-Processamento dos Dados: 
-Execute o script dados.py para processar os dados:
+    3.1  Processamento dos Dados
+    Execute o script dados.py para processar os dados:
     python dados.py
 
 4. Análise e Modelagem
-Abra o notebook dados.ipynb para visualizar a análise dos dados e o processo de modelagem:
+    Abra o notebook dados.ipynb para visualizar a análise dos dados e o processo de modelagem:
     jupyter notebook dados.ipynb
