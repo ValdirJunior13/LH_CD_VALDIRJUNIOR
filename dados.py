@@ -7,20 +7,22 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_extraction.text import CountVectorizer
 import joblib
 
-#1) Questão 
+#1) Faça uma análise exploratória dos dados (EDA), demonstrando as principais características entre as variáveis e apresentando algumas hipóteses de negócio relacionadas. Seja criativo
+
 
 data = pd.read_csv("teste_indicium_precificacao.csv")
 
 #informacoes basicas 
-#print(data.head())
-#print(data.columns)
-#print(data.count())
-#print(data.shape)
-#print(data.describe())
-#print(data['price'].median())
-#print(data['price'].mean())
-#print(data['bairro_group'].value_counts())
-#print(data.info())
+data.head()
+data.columns
+data.count()
+data.shape
+data.isna().sum()
+data.describe()
+data['price'].median()
+data['price'].mean()
+data['bairro_group'].value_counts()
+data.info()
 
 #dados faltantes de strings
 data['nome'] = data['nome'].fillna('Sem informacao')
@@ -33,62 +35,68 @@ data['host_name'] = data['host_name'].fillna('Sem informaccoes do anfitriao')
 data['numero_de_reviews'] = data['numero_de_reviews'].fillna(0)
 data['reviews_por_mes'] = data['reviews_por_mes'].fillna(0)
 data['disponibilidade_365'] = data['disponibilidade_365'].fillna(0)
+
 #valores com datas
-data['ultima_review'] = data['ultima_review'].fillna('1800-01-01')
+data['ultima_review'] = data['ultima_review'].fillna('1800-06-07')
 
 
-#mostrar todos os bairros que pertencem a um grupo
-#divisaoBairro = data.groupby('bairro_group')['bairro'].unique().to_dict()
-#for i, j in divisaoBairro.items():
-    #print("Grupo dos bairros: {}" .format(i))
-    #print("Bairros: {}\n" .format(j))
-    
-#remover espacos 
-data['bairro'] = data['bairro'].str.strip()
 #agrupar por bairros e fazer a média dos valores
-precoGrupo = data.groupby('bairro_group')[['price']].mean().sort_values('price', ascending=False)
+precoGrupo = data.groupby('bairro_group')[['price']].mean().sort_values('price')
 reviewBairros = data.groupby('bairro')['numero_de_reviews'].sum().sort_values(ascending=False)
 disponibilidadeBairros = data.groupby('bairro')['disponibilidade_365'].mean().sort_values(ascending=False)
 
 
-print('melhores bairros com maiores precos médios {}' .format(precoGrupo.head(10)))
-print('Bairros com mais reviews  {}' .format(reviewBairros.head(10)))
-print('Bairros com maior disponibilidade de dias {}' .format(disponibilidadeBairros.head(10)))
-#gráficos
 
-graficoCorrela = data.corr().select_dtypes(include=['int64, float64'])
+#2) a) Supondo que uma pessoa esteja pensando em investir em um apartamento para alugar na plataforma, onde seria mais indicada a compra?
+print("melhores bairros com maiores precos médios {}" .format(precoGrupo.head(5)))
+print("Bairros com mais reviews  {}" .format(reviewBairros.head(5)))
+print("Bairros com maior disponibilidade de dias {}" .format(disponibilidadeBairros.head(5)))
+
+
+precoGrupo.plot(kind='barh', figsize=(10,6))
+sns.scatterplot(x='bairro_group', y = 'price', data=data)
+plt.title('Preco x grupo de bairros')
+plt.xlabel('grupo de bairros')
+plt.ylabel('Preco')
+plt.show()
+
+graficoCorrela = data.select_dtypes(include=['int64' , 'float64']).corr()
 plt.figure(figsize = (10,6))
 sns.heatmap(graficoCorrela, cmap = 'coolwarm', annot = True)
 plt.title('COrrelacao entre as colunas do DataFrame')
 plt.show()
-plt.figure(figsize=(10, 6))
-plt.title('Preço Médio por grupo de bairro')
-plt.xlabel('Preço Médio')
-plt.ylabel('Bairro')
-plt.show() 
 
 plt.figure(figsize=(10, 6))
-sns.heatmap(data[['disponibilidade_365', 'price', 'minimo_noites']].corr(), annot=True, cmap='coolwarm')
-plt.title('Correlação entre Disponibilidade e Preço')
+sns.scatterplot(x='minimo_noites', y='price', data=data, hue = 'disponibilidade_365', alpha = 0.7, palette ='viridis')
+plt.title('Preco x Mínimo de Noites')
+plt.grid(True) 
 plt.show()
 
 plt.figure(figsize=(10, 6))
-sns.scatterplot(x='minimo_noites', y='price', data=data)
-plt.title('Preço vs. Mínimo de Noites')
+sns.scatterplot(x='disponibilidade_365', y='price', data=data)
+plt.title('Preco x Disponibilidade no Ano')
+plt.grid(True) 
 plt.show()
 
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x='disponibilidade_365', y='bairro_group', data=data)
-plt.title('Preço vs. Disponibilidade no Ano')
-plt.show() 
-
-maisCaros = data.groupby('bairro')['price'].mean().sort_values()
-maisCaros.plot(kind='barh', figsize=(10,6))
-sns.scatterplot(x='bairro', y = 'price', data=data)
-plt.title('Preco x Bairro')
-plt.xlabel('Bairro')
-plt.ylabel('Preco')
+plt.figure(figsize=(10,6))
+sns.scatterplot(x='room_type', y='price', data=data) 
+plt.title('Preco x Tipo de Quarto')
+plt.ylabel('Preco') 
+plt.xlabel('Tipo de Quarto')
 plt.show()
+
+#2)b) O número mínimo de noites e a disponibilidade ao longo do ano interferem no preço?
+
+#2)c)Existe algum padrão no texto do nome do local para lugares de mais alto valor?
+divisaoBairro = data.groupby('bairro_group')['bairro'].unique().to_dict()
+for i, j in divisaoBairro.items():
+    print("Grupo dos bairros: {}" .format(i))
+    print("Bairros: {}\n" .format(j))
+    
+
+
+
+#4) Supondo um apartamento com as seguintes características: Qual seria a sua sugestão de preço?
 
 vectorizer = CountVectorizer()
 X_text = vectorizer.fit_transform(data['nome'])
