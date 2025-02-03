@@ -3,7 +3,6 @@
 Este projeto tem como objetivo desenvolver um modelo de Machine Learning para prever os preços de aluguéis temporários em Nova York. Utilizando um conjunto de dados contendo informações sobre propriedades listadas para aluguel, aplicamos análise exploratória de dados (EDA) e um modelo de regressão Random Forest para realizar as previsões.
 
 1. Relatório e Resultados
-
 O relatório da análise exploratória e dos resultados do modelo pode ser encontrado no arquivo relatorio.pdf. As principais descobertas e insights sobre os fatores que influenciam o preço estão descritos no relat
 
 2. Modelo Utilizado
