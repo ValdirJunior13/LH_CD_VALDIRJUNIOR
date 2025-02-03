@@ -1,10 +1,27 @@
+## Descrição do Projeto
 
-# Testando o Node.js
+Este projeto tem como objetivo desenvolver um modelo de Machine Learning para prever os preços de aluguéis temporários em Nova York. Utilizando um conjunto de dados contendo informações sobre propriedades listadas para aluguel, aplicamos análise exploratória de dados (EDA) e um modelo de regressão Random Forest para realizar as previsões.
 
-Este projeto é um sistema de gerenciamento de postagens e categorias desenvolvido como um teste prático das tecnologias do Node.js, integrando tanto o backend quanto o frontend.
+1. Relatório e Resultados
 
-No backend, foi utilizado o framework Express para estruturar rotas, gerenciar requisições e configurar o servidor. A persistência de dados é feita com o MongoDB, utilizando o Mongoose para modelar e interagir com o banco de dados de forma simples e eficiente. Recursos como criação, edição e exclusão de categorias e postagens foram implementados, permitindo um fluxo completo de gerenciamento de conteúdo.
+O relatório da análise exploratória e dos resultados do modelo pode ser encontrado no arquivo relatorio.pdf. As principais descobertas e insights sobre os fatores que influenciam o preço estão descritos no relat
 
-No frontend, o projeto faz uso do mecanismo de templates Handlebars, que facilita a renderização de páginas dinâmicas. O layout foi estruturado com HTML, CSS e elementos visuais integrados com Bootstrap, garantindo uma interface intuitiva e responsiva.
+2. Modelo Utilizado
+O modelo escolhido foi um Random Forest Regressor, pois ele tem bom desempenho para previsão de valores numéricos e é robusto contra outliers e features irrelevantes. Ele foi avaliado utilizando a métrica R² (coeficiente de determinação) e MAE (Mean Absolute Error) para medir sua precisão.
 
-Este projeto tem como objetivo explorar e testar a integração entre o desenvolvimento de servidor (backend) e a criação de interfaces de usuário (frontend) usando tecnologias modernas do ecossistema Node.js. Ele também serve como base para entender conceitos fundamentais de CRUD (Create, Read, Update, Delete), organização de rotas e conexão com bancos de dados não
+## Instalação
+
+1. Clone o repositório
+    git clone https://github.com/ValdirJunior13/LH_CD_VALDIRJUNIOR 
+
+2. Instalando as dependências
+    pip install -r requirements.txt
+
+3. Executando o Projeto 
+Processamento dos Dados: 
+Execute o script dados.py para processar os dados:
+    python dados.py
+
+4. Análise e Modelagem
+Abra o notebook dados.ipynb para visualizar a análise dos dados e o processo de modelagem:
+    jupyter notebook dados.ipynb
