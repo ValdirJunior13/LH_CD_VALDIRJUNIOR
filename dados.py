@@ -37,8 +37,6 @@ data['disponibilidade_365'] = data['disponibilidade_365'].fillna(0)
 data['ultima_review'] = data['ultima_review'].fillna('1800-01-01')
 
 
-numeroReviews = data.groupby('bairro')['numero_reviews'].sum().sort_index()
-print(numeroReviews)
 #mostrar todos os bairros que pertencem a um grupo
 #divisaoBairro = data.groupby('bairro_group')['bairro'].unique().to_dict()
 #for i, j in divisaoBairro.items():
@@ -48,11 +46,18 @@ print(numeroReviews)
 #remover espacos 
 data['bairro'] = data['bairro'].str.strip()
 #agrupar por bairros e fazer a média dos valores
-precoGrupo = data.groupby('bairro_group')[['price']].mean().sort_values('price')
+precoGrupo = data.groupby('bairro_group')[['price']].mean().sort_values('price', ascending=False)
+reviewBairros = data.groupby('bairro')['numero_de_reviews'].sum().sort_values(ascending=False)
+disponibilidadeBairros = data.groupby('bairro')['disponibilidade_365'].mean().sort_values(ascending=False)
 
-data.groupby('bairro')['disponibilidade_365'].mean().sort_values(ascending=False)
 
+print('melhores bairros com maiores precos médios {}' .format(precoGrupo.head(10)))
+print('Bairros com mais reviews  {}' .format(reviewBairros.head(10)))
+print('Bairros com maior disponibilidade de dias {}' .format(disponibilidadeBairros.head(10)))
 #gráficos
+
+
+
 precoGrupo.head(10).plot(kind='barh', figsize=(10, 6), color='purple')
 plt.title('Preço Médio por grupo de bairro')
 plt.xlabel('Preço Médio')
@@ -60,7 +65,7 @@ plt.ylabel('Bairro')
 plt.show() 
 
 plt.figure(figsize=(10, 6))
-sns.heatmap(data[['disponibilidade_365', 'price', 'reviews_por_mes']].corr(), annot=True, cmap='coolwarm')
+sns.heatmap(data[['disponibilidade_365', 'price', 'minimo_noites']].corr(), annot=True, cmap='coolwarm')
 plt.title('Correlação entre Disponibilidade e Preço')
 plt.show()
 
@@ -74,9 +79,7 @@ sns.scatterplot(x='disponibilidade_365', y='bairro_group', data=data)
 plt.title('Preço vs. Disponibilidade no Ano')
 plt.show() 
 
-maisCaros = data.groupby('bairro')['price'].mean().sort_values(
-    
-)
+maisCaros = data.groupby('bairro')['price'].mean().sort_values()
 maisCaros.plot(kind='barh', figsize=(10,6))
 sns.scatterplot(x='bairro', y = 'price', data=data)
 plt.title('Preco x Bairro')
