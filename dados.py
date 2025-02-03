@@ -6,7 +6,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import r2_score
-
 import joblib
 
 #1) Faça uma análise exploratória dos dados (EDA), demonstrando as principais características entre as variáveis e apresentando algumas hipóteses de negócio relacionadas. Seja criativo
@@ -15,91 +14,90 @@ import joblib
 data = pd.read_csv("teste_indicium_precificacao.csv")
 
 # informacoes basicas 
-# print(data.head())
-# print(data.columns)
-# print(data.count())
-# print(data.shape)
-# print(data.isna().sum())
-# print(data.describe())
-# print(data['price'].median())
-# print(data['price'].mean())
-# print(data['price'].max())
-# print(data['price'].min())
-# print(data['bairro_group'].value_counts())
-# print(data.info())
+print(data.head())
+print(data.columns)
+print(data.count())
+print(data.shape)
+print(data.isna().sum())
+print(data.describe())
+print(data['price'].median())
+print(data['price'].mean())
+print(data['price'].max())
+print(data['price'].min())
+print(data['bairro_group'].value_counts())
+print(data.info())
 
-# #dados faltantes de strings
-# data['nome'] = data['nome'].fillna('Sem informacao')
-# data['bairro_group'] = data['bairro_group'].fillna('Sem informacao do grupo do bairro')
-# data['bairro'] = data['bairro'].fillna('Sem informacao do bairro')
-# data['room_type'] = data['room_type'].fillna('Sem informacao do tipo de quarto')
-# data['host_name'] = data['host_name'].fillna('Sem informaccoes do anfitriao')
+#dados faltantes de strings
+data['nome'] = data['nome'].fillna('Sem informacao')
+data['bairro_group'] = data['bairro_group'].fillna('Sem informacao do grupo do bairro')
+data['bairro'] = data['bairro'].fillna('Sem informacao do bairro')
+data['room_type'] = data['room_type'].fillna('Sem informacao do tipo de quarto')
+data['host_name'] = data['host_name'].fillna('Sem informaccoes do anfitriao')
 
-# #dados faltantes de numericos
-# data['numero_de_reviews'] = data['numero_de_reviews'].fillna(0)
-# data['reviews_por_mes'] = data['reviews_por_mes'].fillna(0)
-# data['disponibilidade_365'] = data['disponibilidade_365'].fillna(0)
+#dados faltantes de numericos
+data['numero_de_reviews'] = data['numero_de_reviews'].fillna(0)
+data['reviews_por_mes'] = data['reviews_por_mes'].fillna(0)
+data['disponibilidade_365'] = data['disponibilidade_365'].fillna(0)
 
-# #valores com datas
-# data['ultima_review'] = data['ultima_review'].fillna('1800-06-07')
-
-
-# #agrupar por bairros e fazer a média dos valores
-# precoGrupo = data.groupby('bairro_group')[['price']].mean().sort_values('price')
-# reviewBairros = data.groupby('bairro')['numero_de_reviews'].sum().sort_values(ascending=False)
-# disponibilidadeBairros = data.groupby('bairro')['disponibilidade_365'].mean().sort_values(ascending=False)
+#valores com datas
+data['ultima_review'] = data['ultima_review'].fillna('1800-06-07')
 
 
-
-# # #2) a) Supondo que uma pessoa esteja pensando em investir em um apartamento para alugar na plataforma, onde seria mais indicada a compra?
-# print("melhores bairros com maiores precos médios {}" .format(precoGrupo.head(5)))
-# print("Bairros com mais reviews  {}" .format(reviewBairros.head(5)))
-# print("Bairros com maior disponibilidade de dias {}" .format(disponibilidadeBairros.head(5)))
-
-
-# precoGrupo.plot(kind='barh', figsize=(10, 6), color='purple')
-# plt.title('Preço Médio por Bairro')
-# plt.xlabel('Preço Médio')
-# plt.show()
+#agrupar por bairros e fazer a média dos valores
+precoGrupo = data.groupby('bairro_group')[['price']].mean().sort_values('price')
+reviewBairros = data.groupby('bairro')['numero_de_reviews'].sum().sort_values(ascending=False)
+disponibilidadeBairros = data.groupby('bairro')['disponibilidade_365'].mean().sort_values(ascending=False)
 
 
-# graficoCorrela = data.select_dtypes(include=['int64' , 'float64']).corr()
-# plt.figure(figsize = (10,6))
-# sns.heatmap(graficoCorrela, cmap = 'coolwarm', annot = True)
-# plt.title('COrrelacao entre as colunas do DataFrame')
-# plt.show()
 
-# plt.figure(figsize=(10, 6))
-# sns.scatterplot(x='minimo_noites', y='price', data=data, hue = 'disponibilidade_365', alpha = 0.7, palette ='viridis')
-# plt.title('Preco x Mínimo de Noites')
-# plt.grid(True) 
-# plt.show()
+# #2) a) Supondo que uma pessoa esteja pensando em investir em um apartamento para alugar na plataforma, onde seria mais indicada a compra?
+print("melhores bairros com maiores precos médios {}" .format(precoGrupo.head(5)))
+print("Bairros com mais reviews  {}" .format(reviewBairros.head(5)))
+print("Bairros com maior disponibilidade de dias {}" .format(disponibilidadeBairros.head(5)))
 
-# plt.figure(figsize=(10, 6))
-# sns.scatterplot(x='disponibilidade_365', y='price', data=data)
-# plt.title('Preco x Disponibilidade no Ano')
-# plt.grid(True) 
-# plt.show()
 
-# plt.figure(figsize=(10,6))
-# sns.scatterplot(x='room_type', y='price', data=data) 
-# plt.title('Preco x Tipo de Quarto')
-# plt.ylabel('Preco') 
-# plt.xlabel('Tipo de Quarto')
-# plt.show()
+precoGrupo.plot(kind='barh', figsize=(10, 6), color='purple')
+plt.title('Preço Médio por Bairro')
+plt.xlabel('Preço Médio')
+plt.show()
 
-# #2)b) O número mínimo de noites e a disponibilidade ao longo do ano interferem no preço?
+graficoCorrela = data.select_dtypes(include=['int64' , 'float64']).corr()
+plt.figure(figsize = (10,6))
+sns.heatmap(graficoCorrela, cmap = 'coolwarm', annot = True)
+plt.title('COrrelacao entre as colunas do DataFrame')
+plt.show()
 
-#2)c)Existe algum padrão no texto do nome do local para lugares de mais alto valor?
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='minimo_noites', y='price', data=data, hue = 'disponibilidade_365', alpha = 0.7, palette ='viridis')
+plt.title('Preco x Mínimo de Noites')
+plt.grid(True) 
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='disponibilidade_365', y='price', data=data)
+plt.title('Preco x Disponibilidade no Ano')
+plt.grid(True) 
+plt.show()
+
+plt.figure(figsize=(10,6))
+sns.scatterplot(x='room_type', y='price', data=data) 
+plt.title('Preco x Tipo de Quarto')
+plt.ylabel('Preco') 
+plt.xlabel('Tipo de Quarto')
+plt.show()
+
+#2)b) O número mínimo de noites e a disponibilidade ao longo do ano interferem no preço?
+
+# 2)c)Existe algum padrão no texto do nome do local para lugares de mais alto valor?
 divisaoBairro = data.sort_values(by='price', ascending=False).groupby('bairro_group')['bairro'].unique().to_dict()
 for i, j in divisaoBairro.items():
     print("Grupo dos bairros: {}" .format(i))
     print("Bairros: {}\n" .format(j))
     
 
-# print(f"R² do modelo: {r2_score(y_test, y_pred):.2f}")
 
-# #4) Supondo um apartamento com as seguintes características: Qual seria a sua sugestão de preço?
+
+#4) Supondo um apartamento com as seguintes características: Qual seria a sua sugestão de preço?
 
 vectorizer = CountVectorizer()
 X_text = vectorizer.fit_transform(data['nome'])
@@ -112,7 +110,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
-
 
 apartamento = {'id': 2595,
     'nome': 'Skylit Midtown Castle',
@@ -135,4 +132,11 @@ novoData = novoData.reindex(columns=X.columns, fill_value=0)
 precoPrevisto = model.predict(novoData)
 print("Preco previsto: {}" .format(precoPrevisto[0]))
 
-# #joblib.dump(model, 'modeloPrecificacao.pkl')
+with open('modeloPrecificacao_pickle.pkl', 'wb') as file:
+    pickle.dump(model, file)
+
+with open('modeloPrecificacao_pickle.pkl', 'rb') as file:
+    modeloCarregadopickle = pickle.load(file)
+    
+joblib.dump(model, 'modeloPrecificacao_joblib.pkl')
+modeloCarregadojoblib = joblib.load('modeloPrecificacao_joblib.pkl')
