@@ -56,9 +56,12 @@ print('Bairros com mais reviews  {}' .format(reviewBairros.head(10)))
 print('Bairros com maior disponibilidade de dias {}' .format(disponibilidadeBairros.head(10)))
 #gráficos
 
-
-
-precoGrupo.head(10).plot(kind='barh', figsize=(10, 6), color='purple')
+graficoCorrela = data.corr().select_dtypes(include=['int64, float64'])
+plt.figure(figsize = (10,6))
+sns.heatmap(graficoCorrela, cmap = 'coolwarm', annot = True)
+plt.title('COrrelacao entre as colunas do DataFrame')
+plt.show()
+plt.figure(figsize=(10, 6))
 plt.title('Preço Médio por grupo de bairro')
 plt.xlabel('Preço Médio')
 plt.ylabel('Bairro')
